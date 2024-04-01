@@ -1,0 +1,6 @@
+SELECT 
+    100 * ROUND((SELECT SUM(salary) FROM salaries WHERE salary >= 5000) / (SELECT SUM(salary) FROM salaries), 2) as poverty_percentage,
+    AVG(salary) as average_salary,
+    (SELECT AVG(salary) FROM (SELECT salary FROM salaries ORDER BY salary LIMIT (SELECT COUNT(*) * 0.1 FROM salaries) OFFSET (SELECT COUNT(*) * 0.9 FROM salaries))) as median_salary,
+    100 * ROUND((SELECT SUM(salary) FROM (SELECT salary FROM salaries ORDER BY salary DESC LIMIT (SELECT COUNT(*) * 0.1 FROM salaries))) / (SELECT SUM(salary) FROM (SELECT salary FROM salaries ORDER BY salary LIMIT (SELECT COUNT(*) * 0.9 FROM salaries))), 2) as inequality_percentage
+FROM salaries;
